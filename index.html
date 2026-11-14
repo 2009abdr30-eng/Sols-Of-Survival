@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mars: Sols of Survival</title>
+  <meta name="description" content="A browser game for kids: run a Mars or Moon outpost through real NASA space-weather events.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Lilita+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="site-mars">
+
+  <nav class="corner-nav" aria-label="Game menu">
+    <button class="btn btn-blue nav-btn" data-action="menu">🏠 <span>Main Menu</span></button>
+    <button class="btn btn-blue nav-btn" data-action="settings">⚙️ <span>Settings</span></button>
+  </nav>
+
+  <section id="screen-loading" class="screen active">
+    <div class="hero">
+      <h1 class="logo"><span class="logo-main">MARS</span><span class="logo-sub">Sols of Survival</span></h1>
+      <div class="hero-cat"><div class="bubble">Hello!</div><div class="art-slot" data-kitten="me"></div></div>
+      <div class="loading-label">LOADING...</div>
+      <div class="loadbar"><div class="loadfill" id="loadfill"></div><div class="rover" id="rover"><span class="art-slot" data-art="rover" data-emoji="🛻"></span></div></div>
+    </div>
+  </section>
+
+  <section id="screen-title" class="screen">
+    <div class="hero">
+      <h1 class="logo"><span class="logo-main">MARS</span><span class="logo-sub">Sols of Survival</span></h1>
+      <div class="hero-cat"><div class="art-slot" data-kitten="me"></div></div>
+      <p class="tagline">Build a base. Survive real space weather.</p>
+      <button class="btn btn-play pulse" data-action="start">START</button>
+      <div class="row">
+        <button class="btn btn-blue" data-action="sources">📋 Data Sources</button>
+        <button class="btn btn-blue" data-action="settings">⚙️ Settings</button>
+      </div>
+    </div>
+    <div class="scene-deco" aria-hidden="true">
+      <span class="art-slot deco-dome" data-art="habitat" data-emoji="🛖"></span>
+      <span class="art-slot deco-solar" data-art="solar" data-emoji="🔆"></span>
+    </div>
+    <div class="title-kittens" aria-hidden="true"><span class="art-slot" data-kitten="nova"></span><span class="art-slot" data-kitten="cosmo"></span><span class="art-slot" data-kitten="rocket"></span><span class="art-slot" data-kitten="luna"></span></div>
+    <div id="apod" class="apod hidden"></div>
+    <p class="footer-note">Uses real NASA data · No account · No ads</p>
+  </section>
+
+  <section id="screen-kitten" class="screen">
+    <h2 class="big-title">CHOOSE YOUR SPACE KITTEN</h2>
+    <div class="kcards" id="kitten-cards"></div>
+    <p class="hint-line" id="kitten-line"></p>
+    <div class="row"><button class="btn btn-blue" data-action="home">◀ BACK</button><button class="btn btn-play" id="btn-kitten-go" data-action="to-missions" disabled>CONTINUE ▶</button></div>
+  </section>
+
+  <section id="screen-missions" class="screen">
+    <h2 class="big-title">CHOOSE A MISSION</h2>
+    <div class="cards4">
+      <button class="mcard m-quick" data-action="pick-mission" data-id="quick">
+        <span class="mc-art art-slot" data-art="card-quick" data-emoji="🚀"></span>
+        <span class="mc-name">QUICK MISSION</span>
+        <span class="mc-desc">5 real NASA events · about 3 minutes</span>
+        <span class="mc-tag">SELECT</span>
+      </button>
+      <button class="mcard m-endless" data-action="pick-mission" data-id="infinite">
+        <span class="mc-art art-slot" data-art="card-endless" data-emoji="🛖"></span>
+        <span class="mc-name">INFINITE BASE ∞</span>
+        <span class="mc-desc">Random real events, danger rising. Resupply every 5 Sols</span>
+        <span class="mc-tag">SELECT</span>
+      </button>
+      <button class="mcard m-live" data-action="pick-mission" data-id="live">
+        <span class="mc-art art-slot" data-art="card-live" data-emoji="☀️"></span>
+        <span class="mc-name">TODAY'S SPACE WEATHER</span>
+        <span class="mc-desc">3 days of the Sun's real activity this week</span>
+        <span class="mc-tag live-tag">● LIVE</span>
+      </button>
+      <button class="mcard m-family" data-action="pick-mission" data-id="family">
+        <span class="mc-art art-slot" data-art="card-family" data-emoji="👨‍👩‍👧"></span>
+        <span class="mc-name">FAMILY / CLASS MODE</span>
+        <span class="mc-desc">Play together and talk about each choice</span>
+        <span class="mc-tag">SELECT</span>
+      </button>
+    </div>
+    <button class="btn btn-blue btn-back" data-action="home">◀ BACK</button>
+    <div class="corner-cat"><div class="art-slot" data-kitten="me"></div></div>
+  </section>
+
+  <section id="screen-location" class="screen">
+    <h2 class="big-title">CHOOSE OUTPOST LOCATION</h2>
+    <div class="cards2">
+      <button class="lcard l-mars" data-action="pick-site" data-id="mars">
+        <span class="lc-name">MARS OUTPOST</span>
+        <span class="lc-place">(Jezero Crater)</span>
+        <span class="lc-pic art-slot" data-art="site-mars" data-emoji="🔴"></span>
+        <span class="lc-row"><span class="lc-ico">🛰️</span><span><b>LIGHT DELAY</b><br>3 – 22 mins</span></span>
+        <span class="lc-row"><span class="lc-ico">🌪️</span><span><b>WEATHER</b><br>Dust Storms</span></span>
+        <span class="lc-row"><span class="lc-ico">☢️</span><span><b>RADIATION</b><br>Medium-High</span></span>
+      </button>
+      <button class="lcard l-moon" data-action="pick-site" data-id="moon">
+        <span class="lc-name">MOON BASE</span>
+        <span class="lc-place">(South Pole)</span>
+        <span class="lc-pic art-slot" data-art="site-moon" data-emoji="🌕"></span>
+        <span class="lc-row"><span class="lc-ico">🛰️</span><span><b>LIGHT DELAY</b><br>~1.3 seconds</span></span>
+        <span class="lc-row"><span class="lc-ico">🌑</span><span><b>WEATHER</b><br>None (long nights)</span></span>
+        <span class="lc-row"><span class="lc-ico">☢️</span><span><b>RADIATION</b><br>High</span></span>
+      </button>
+    </div>
+    <p class="hint-line" id="live-status"></p>
+    <button class="btn btn-blue btn-back" data-action="to-missions">◀ BACK</button>
+    <div class="corner-cat"><div class="art-slot" data-kitten="me"></div></div>
+  </section>
+
+  <section id="screen-story" class="screen">
+    <div class="story" id="story"></div>
+  </section>
+
+  <section id="screen-brief" class="screen">
+    <div class="panel brief" id="brief"></div>
+  </section>
+
+  <section id="screen-game" class="screen">
+    <header class="hud">
+      <div class="hud-left">
+        <div class="sol" id="sol-label">SOL 1</div>
+        <div class="bars">
+          <div class="bar" id="bar-power"><span class="ico">⚡</span><div class="track"><div class="fill"></div><div class="ghost"></div><span class="num"></span></div><span class="lbl">Power</span><span class="arrow"></span></div>
+          <div class="bar" id="bar-life"><span class="ico">💨</span><div class="track"><div class="fill"></div><div class="ghost"></div><span class="num"></span></div><span class="lbl">Life Support</span><span class="arrow"></span></div>
+          <div class="bar" id="bar-health"><span class="ico">❤️</span><div class="track"><div class="fill"></div><div class="ghost"></div><span class="num"></span></div><span class="lbl">Crew Health</span><span class="arrow"></span></div>
+        </div>
+        <div class="shield"><span class="lbl">🛡️ Shield</span><span class="segs" id="shield-segs"></span></div>
+      </div>
+      <div class="forecast" id="forecast"></div>
+      <div class="hud-side">
+        <div class="credits" id="credits"><span class="lbl">Credits</span><span class="star-badge">🪙<b id="credits-num">0</b></span></div>
+        <div class="action-meter"><span class="lbl">Actions</span><span class="actions" id="actions"></span></div>
+        <button class="icon-btn" data-action="settings" aria-label="Settings">⚙️</button>
+      </div>
+    </header>
+
+    <div class="playfield">
+      <div class="grid-wrap">
+        <svg id="grid" viewBox="0 0 1280 714" preserveAspectRatio="xMidYMid slice" role="group" aria-label="Your base"></svg>
+      </div>
+    </div>
+
+    <div class="dock" id="dock">
+      <div class="balance" id="balance"></div>
+      <div class="crates" id="crates"></div>
+      <button class="btn btn-go" id="btn-launch" data-action="launch" disabled>LAUNCH SOL 1 ▶</button>
+    </div>
+
+    <div class="bottom-row" id="kitten-dock">
+      <div class="cat-box">
+        <div class="dock-kitten pose-talk" id="dock-kitten"><span class="art-slot" data-kitten="me"></span></div>
+        <div class="speech" id="cat-say" aria-live="polite">Let's build!</div>
+      </div>
+      <div class="end-btns"><button class="btn btn-red" id="btn-endgame" data-action="endgame">🏆 END GAME</button><button class="btn btn-go" id="btn-endsol" data-action="endsol">END SOL ▶</button></div>
+    </div>
+  </section>
+
+  <div id="overlay" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="panel modal" id="modal"></div>
+  </div>
+
+  <div id="settings" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="settings-panel">
+      <button class="close-x" data-action="close-settings" aria-label="Close settings">✕</button>
+      <h2 id="settings-title" class="big-title small">SETTINGS</h2>
+      <div class="set-row"><span class="set-ico">🔊</span><span class="set-name">SOUND</span><button class="toggle" data-action="toggle" data-id="sound" role="switch"></button></div>
+      <div class="set-row"><span class="set-ico">🎵</span><span class="set-name">MUSIC</span><button class="toggle" data-action="toggle" data-id="music" role="switch"></button></div>
+      <div class="set-row"><span class="set-ico">💬</span><span class="set-name">READ ALOUD</span><button class="toggle" data-action="toggle" data-id="readAloud" role="switch"></button></div>
+      <div class="set-row"><span class="set-ico">🔠</span><span class="set-name">TEXT SIZE</span><input type="range" id="text-size" min="14" max="24" step="1" aria-label="Text size"></div>
+      <div class="set-row"><span class="set-ico">🌙</span><span class="set-name">CALM MODE</span><button class="toggle" data-action="toggle" data-id="calm" role="switch"></button></div>
+      <div class="set-row"><span class="set-ico">⏰</span><span class="set-name">SCREEN-TIME REMINDER</span>
+        <select id="reminder" aria-label="Screen-time reminder">
+          <option value="0">Off</option><option value="10">10 min</option><option value="20">20 min</option><option value="30">30 min</option>
+        </select>
+      </div>
+      <p class="small">Settings stay on this device only. Nothing is sent anywhere.</p>
+    </div>
+  </div>
+
+  <section id="screen-debrief" class="screen">
+    <div class="panel debrief" id="debrief"></div>
+  </section>
+
+  <section id="screen-sources" class="screen">
+    <h2 class="big-title">DATA SOURCES</h2>
+    <div class="sources-wrap">
+      <div class="sources-panel">
+        <h3>NASA DATA SOURCES</h3>
+        <div id="sources-list"></div>
+      </div>
+      <div class="real-box">
+        <h3>REAL vs. SIMPLIFIED!</h3>
+        <p><b>Real:</b> event dates, flare classes, CME speeds, radiation measured by Curiosity on Mars and Chang'e-4 on the Moon, the 2018 Mars dust storm, message delay to Earth.</p>
+        <p><b>Simplified for play:</b> bar sizes, how much each building makes, how long a Sol lasts in the game, and how radiation turns into Crew Health points.</p>
+        <p><span class="badge live">LIVE</span> = fetched from NASA today. <span class="badge archive">ARCHIVE</span> = real past data stored in the game. <span class="badge offline">OFFLINE</span> = live data could not load, so we used the archive.</p>
+        <h3>HOW WE MADE THIS</h3>
+        <p>Game code was written with help from Claude (Anthropic). The art was made with AI image tools. Our team chose and checked every NASA fact, number and design decision.</p>
+        <div class="science-cat"><div class="bubble">Science is cool!</div><div class="art-slot" data-kitten="me"></div></div>
+      </div>
+    </div>
+    <button class="btn btn-blue btn-back" data-action="home">◀ BACK</button>
+  </section>
+
+  <script src="js/icons.js"></script>
+  <script src="data/events.js"></script>
+  <script src="data/events-infinite.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
